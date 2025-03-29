@@ -53,4 +53,34 @@ router.get("/", async (req, res) => {
   }
 });
 
+// ✅ PATCH: Update Artisan Status
+router.patch("/:id", async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    if (!["pending", "approved", "declined"].includes(status)) {
+      return res.status(400).json({ error: "Invalid status value" });
+    }
+
+    const updatedArtisan = await Artisan.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    if (!updatedArtisan) {
+      return res.status(404).json({ error: "Artisan not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Status updated", artisan: updatedArtisan });
+  } catch (error) {
+    console.error("Status Update Error:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to update status", details: error.message });
+  }
+});
+
 export default router;
