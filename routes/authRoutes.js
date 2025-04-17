@@ -8,24 +8,30 @@ const router = express.Router();
 
 // Signup Route
 router.post("/signup", async (req, res) => {
-  const { username, password } = req.body;
-
-  // Check if the admin already exists
-  const existingAdmin = await Admin.findOne({ username });
-  if (existingAdmin) {
-    return res.status(400).json({ message: "Admin already exists" });
-  }
-
-  // Hash the password
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  // Create new admin
-  const newAdmin = new Admin({
-    username,
-    password: hashedPassword,
-  });
+  const { username, email, password } = req.body;
 
   try {
+    // Check if the admin username or email already exists
+    const existingAdmin = await Admin.findOne({
+      $or: [{ username }, { email }],
+    });
+
+    if (existingAdmin) {
+      return res
+        .status(400)
+        .json({ message: "Admin with that username or email already exists" });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new admin
+    const newAdmin = new Admin({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
     await newAdmin.save();
     return res.status(201).json({ message: "Admin created successfully" });
   } catch (err) {
