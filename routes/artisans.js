@@ -15,6 +15,7 @@ router.post("/register", async (req, res) => {
       specialty,
       experience,
       profilePicture,
+      nin,
     } = req.body;
 
     const artisan = new Artisan({
@@ -26,6 +27,7 @@ router.post("/register", async (req, res) => {
       specialty,
       experience,
       profilePicture,
+      nin,
     });
 
     await artisan.save();

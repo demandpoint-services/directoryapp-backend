@@ -6,7 +6,8 @@ const router = express.Router();
 // ✅ Register Client
 router.post("/register", async (req, res) => {
   try {
-    const { fullName, phone, email, state, city, profilePicture } = req.body;
+    const { fullName, phone, email, state, city, profilePicture, nin } =
+      req.body;
 
     const client = new Client({
       fullName,
@@ -15,6 +16,7 @@ router.post("/register", async (req, res) => {
       state,
       city,
       profilePicture,
+      nin,
     });
     await client.save();
 
