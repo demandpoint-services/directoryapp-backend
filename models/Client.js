@@ -7,6 +7,15 @@ const ClientSchema = new mongoose.Schema({
   city: { type: String, required: true },
   state: { type: String, required: true },
   profilePicture: String,
+  nin: {
+    type: String,
+    required: true,
+    unique: true,
+    validate: {
+      validator: (v) => /^\d{11}$/.test(v),
+      message: (props) => `${props.value} is not a valid NIN.`,
+    },
+  },
 });
 
 export default mongoose.model("Client", ClientSchema);
